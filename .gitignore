@@ -1,0 +1,44 @@
+# composer
+composer.lock
+/vendor/
+
+# npm
+package-lock.json
+/node_modules/
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.swp
+*.bkp
+*.bak
+*~
+.~lock.*
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Temporary files
+/tmp/
+
+# vimeo/psalm
+.psalm/cache
+
+# phpunit (we only commit phpunit.xml.dist)
+/phpunit.xml
+
+# phpunit temporary files
+.phpunit.result.cache
+
+# php-cs-fixer temporary files
+/.php_cs.cache
+/.php-cs-fixer.cache
