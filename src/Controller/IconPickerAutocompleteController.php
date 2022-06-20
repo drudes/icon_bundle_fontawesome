@@ -1,13 +1,5 @@
 <?php declare(strict_types=1);
 
-/*
- * This file is part of ptomulik/icon_bundle_fontawesome.
- *
- * Copyright (c) Paweł Tomulik <ptomulik@meil.pw.edu.pl>
- *
- * View the LICENSE file for full copyright and license information.
- */
-
 namespace Drupal\icon_bundle_fontawesome\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -67,6 +59,94 @@ class IconPickerAutocompleteController extends ControllerBase implements Contain
             }
         }
 
+        return new JsonResponse($response);
+    }
+
+    public function handleWrapperClass(Request $request): JsonResponse
+    {
+        // https://fontawesome.com/docs/web/style/style-cheatsheet
+        $classes = [
+            // General
+            'fa-inverse' => 'general',
+            // Sizing Icons
+            'fa-1x' => 'sizing',
+            'fa-2x' => 'sizing',
+            'fa-3x' => 'sizing',
+            'fa-4x' => 'sizing',
+            'fa-5x' => 'sizing',
+            'fa-6x' => 'sizing',
+            'fa-7x' => 'sizing',
+            'fa-8x' => 'sizing',
+            'fa-9x' => 'sizing',
+            'fa-10x' => 'sizing',
+            'fa-2xs' => 'sizing',
+            'fa-xs' => 'sizing',
+            'fa-sm' => 'sizing',
+            'fa-lg' => 'sizing',
+            'fa-xl' => 'sizing',
+            'fa-2xl' => 'sizing',
+            // Fixed-Width Icons
+            'fa-fw' => 'fixed',
+            // Icons in a List
+            'fa-ul' => 'lists',
+            'fa-li' => 'lists',
+            // Rotating Icons
+            'fa-rotate-90' => 'rotating',
+            'fa-rotate-180' => 'rotating',
+            'fa-rotate-270' => 'rotating',
+            'fa-flip-horizontal' => 'rotating',
+            'fa-flip-vertical' => 'rotating',
+            'fa-flip-both' => 'rotating',
+            // 'fa-rotate-by',
+            // Animating icons
+            'fa-spin' => 'animating',
+            'fa-spin-pulse' => 'animating',
+            'fa-spin-reverse' => 'animating',
+            'fa-beat' => 'animating',
+            'fa-fade' => 'animating',
+            'fa-flip' => 'animating',
+            // Bordered Icons
+            'fa-border' => 'bordered',
+            // Pulled Icons
+            'fa-pull-left' => 'pulled',
+            'fa-pull-right' => 'pulled',
+            // Stacking Icons
+            'fa-stack-1x' => 'stacking',
+            'fa-stack-2x' => 'stacking',
+            // Duotone Icons
+            'fa-swap-opacity' => 'duotone',
+            // Accessibility
+            'fa-sr-only' => 'accessibility',
+            'fa-sr-only-focusable' => 'accessibility',
+        ];
+
+        if (empty($input = AutocompleteHelper::getInput($request))) {
+            return new JSonReponse([]);
+        }
+
+        $words = array_map('trim', explode(' ', $input));
+
+        $last = array_pop($words);
+
+        $already_selected_classes = array_intersect_key($classes, array_combine($words, $words));
+        $already_defined_stylings = array_unique(array_values($already_selected_classes));
+        $available_classes = array_diff($classes, $already_defined_stylings);
+
+        $response = [];
+
+        foreach ($available_classes as $class => $styling) {
+            $matched = mb_strstr($class, $last);
+            if (false === $matched || 0 === mb_strlen($matched)) {
+                $matched = mb_strstr($styling, $last);
+            }
+            if (false !== $matched && mb_strlen($matched) > 0) {
+                $value = implode(' ', array_merge($words, [$class]));
+                $response[] = [
+                    'value' => $value,
+                    'label' => t($value),
+                ];
+            }
+        }
         return new JsonResponse($response);
     }
 }

@@ -1,13 +1,5 @@
 <?php declare(strict_types=1);
 
-/*
- * This file is part of ptomulik/icon_bundle_fontawesome.
- *
- * Copyright (c) Paweł Tomulik <ptomulik@meil.pw.edu.pl>
- *
- * View the LICENSE file for full copyright and license information.
- */
-
 namespace Drupal\icon_bundle_fontawesome\Element;
 
 use Drupal\Component\Utility\NestedArray;
@@ -155,9 +147,11 @@ class FontAwesomeIconPicker extends FormElement
                 'wrapper'         => $element_wrapper_id,
                 'disable-refocus' => true,
             ],
+            '#autocomplete_route_name' => 'icon_bundle_fontawesome.autocomplete.icon_picker.wrapper_class',
         ] + ($element['#wrapper_class'] ?? []) + [
             '#title'       => t('Icon Wrapper Classes'),
             '#description' => t('A space separated list of CSS classes.'),
+            '#placeholder' => t('Start typying to autocomplete.'),
         ];
 
         $element['preview'] = [

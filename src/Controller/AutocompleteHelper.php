@@ -1,13 +1,5 @@
 <?php declare(strict_types=1);
 
-/*
- * This file is part of ptomulik/icon_bundle_fontawesome.
- *
- * Copyright (c) Paweł Tomulik <ptomulik@meil.pw.edu.pl>
- *
- * View the LICENSE file for full copyright and license information.
- */
-
 namespace Drupal\icon_bundle_fontawesome\Controller;
 
 use Drupal\Component\Utility\Tags;
@@ -20,10 +12,15 @@ class AutocompleteHelper
         if ('' === ($typed_tag = self::getLastTag($request))) {
             return [];
         }
+        return static::filterByTag($typed_tag, $strings);
+    }
+
+    public static function filterByTag(string $tag, array $strings): array
+    {
         $response = [];
 
         foreach ($strings as $string) {
-            $matched = mb_strstr($string, $typed_tag);
+            $matched = mb_strstr($string, $tag);
             if (false !== $matched && mb_strlen($matched) > 0) {
                 $response[] = [
                     'value' => $string,
@@ -37,6 +34,7 @@ class AutocompleteHelper
 
     public static function getInput(Request $request): string
     {
+        // Get the value of q from the query string
         if (is_string($input = $request->query->get('q', ''))) {
             return $input;
         }
@@ -44,15 +42,18 @@ class AutocompleteHelper
         return '';
     }
 
-    public static function getLastTag(Request $request): string
+    public static function getTags(Request $request): array
     {
         $input = self::getInput($request);
+        return Tags::explode(mb_strtolower($input));
+    }
 
-        // Get the value of q from the query string
-        if (empty($tags = Tags::explode($input))) {
+    public static function getLastTag(Request $request): string
+    {
+        if (empty($tags = self::getTags($request))) {
             return '';
         }
 
-        return mb_strtolower(array_pop($tags));
+        return array_pop($tags);
     }
 }

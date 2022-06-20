@@ -2,10 +2,9 @@ icon_bundle_fontawesome.settings:
   path: '/admin/config/icons/fontawesome'
   defaults:
     _form: '\Drupal\icon_bundle_fontawesome\Form\FontAwesomeSettingsForm'
-#    _form: '@icon_bundle_fontawesome.settings_form'
     _title: 'Font Awesome Settings'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'administer icons'
 
 icon_bundle_fontawesome.autocomplete.icon_picker.icon:
   path: '/admin/icon-bundle-fontawesome/autocomplete/icon-picker/icon'
@@ -13,8 +12,15 @@ icon_bundle_fontawesome.autocomplete.icon_picker.icon:
     _controller: '\Drupal\icon_bundle_fontawesome\Controller\IconPickerAutocompleteController::handleIcon'
     _format: json
   requirements:
-    _access: 'TRUE'
-##    _permission: '??' # FIXME: permissin break autocomplete
+    _permission: 'administer icons'
+
+icon_bundle_fontawesome.autocomplete.icon_picker.wrapper_class:
+  path: '/admin/icon-bundle-fontawesome/autocomplete/icon-picker/wrapper_class'
+  defaults:
+    _controller: '\Drupal\icon_bundle_fontawesome\Controller\IconPickerAutocompleteController::handleWrapperClass'
+    _format: json
+  requirements:
+    _permission: 'administer icons'
 
 icon_bundle_fontawesome.autocomplete.settings_form.asset.cdn.uri:
   path: '/admin/icon-bundle-fontawesome/autocomplete/settings-form/asset/cdn/uri/{version}'
@@ -23,8 +29,7 @@ icon_bundle_fontawesome.autocomplete.settings_form.asset.cdn.uri:
     _format: json
     version: '{version}'
   requirements:
-    _access: 'TRUE'
-##    _permisson: '??' # FIXME: permission breaks autocomplete
+    _permission: 'administer icon bundles'
   options:
     parameters:
       version: string
@@ -36,8 +41,15 @@ icon_bundle_fontawesome.autocomplete.settings_form.metadata.cdn.uri:
     _format: json
     version: '{version}'
   requirements:
-    _access: 'TRUE'
-##    _permisson: '??' # FIXME: permission breaks autocomplete
+    _permission: 'administer icon bundles'
   options:
     parameters:
       version: string
+
+icon_bundle_fontawesome.autocomplete.settings_form.metadata.self.path:
+  path: '/admin/icon-bundle-fontawesome/autocomplete/settings-form/metadata/self/path'
+  defaults:
+    _controller: '\Drupal\icon_bundle_fontawesome\Controller\SettingsFormAutocompleteController::handleMetadataSelfPath'
+    _format: json
+  requirements:
+    _permission: 'administer icon bundles'

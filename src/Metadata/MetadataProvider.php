@@ -1,13 +1,5 @@
 <?php declare(strict_types=1);
 
-/*
- * This file is part of ptomulik/icon_bundle_fontawesome.
- *
- * Copyright (c) Paweł Tomulik <ptomulik@meil.pw.edu.pl>
- *
- * View the LICENSE file for full copyright and license information.
- */
-
 namespace Drupal\icon_bundle_fontawesome\Metadata;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -54,7 +46,7 @@ class MetadataProvider implements MetadataProviderInterface, ContainerInjectionI
 
     public function getIconsSearchArray(array $data_array): array
     {
-        if (null === ($location_id = $data_array['__info__']['location_id'] ?? null)) {
+        if (null === ($location_id = $data_array['_info']['location_id'] ?? null)) {
             return self::buildIconsSearchArray($data_array);
         }
 
@@ -120,7 +112,7 @@ class MetadataProvider implements MetadataProviderInterface, ContainerInjectionI
 
     protected static function parseIconsDataArray(array $array, array $info): array
     {
-        $data_array = ['__info__' => $info];
+        $data_array = ['_info' => $info];
         // Traverse through every icon
         foreach ($array as $name => $data) {
             $styles = $data['styles'] ?? [];
