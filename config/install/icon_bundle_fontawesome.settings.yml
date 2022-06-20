@@ -1,0 +1,22 @@
+method: 'svg'
+asset:
+  version: '6.1.1'
+  delivery: 'cdn'
+  self:
+    path: '/libraries/fortawesome--fontawesome-free'
+  cdn:
+    uri: 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1'
+  kit:
+    uri: 'https://kit.fontawesome.com/deadbeef42.js'
+  use:
+    solid: true
+    regular: true
+    light: false
+    brands: true
+metadata:
+  delivery: 'auto'
+  cdn:
+    uri: 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/metadata'
+  self:
+    path: 'libraries/fortawesome--fontawesome-free/metadata'
+use_fa_icon_chooser: false

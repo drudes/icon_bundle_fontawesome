@@ -1,0 +1,43 @@
+icon_bundle_fontawesome.settings:
+  path: '/admin/config/icons/fontawesome'
+  defaults:
+    _form: '\Drupal\icon_bundle_fontawesome\Form\FontAwesomeSettingsForm'
+#    _form: '@icon_bundle_fontawesome.settings_form'
+    _title: 'Font Awesome Settings'
+  requirements:
+    _permission: 'access administration pages'
+
+icon_bundle_fontawesome.autocomplete.icon_picker.icon:
+  path: '/admin/icon-bundle-fontawesome/autocomplete/icon-picker/icon'
+  defaults:
+    _controller: '\Drupal\icon_bundle_fontawesome\Controller\IconPickerAutocompleteController::handleIcon'
+    _format: json
+  requirements:
+    _access: 'TRUE'
+##    _permission: '??' # FIXME: permissin break autocomplete
+
+icon_bundle_fontawesome.autocomplete.settings_form.asset.cdn.uri:
+  path: '/admin/icon-bundle-fontawesome/autocomplete/settings-form/asset/cdn/uri/{version}'
+  defaults:
+    _controller: '\Drupal\icon_bundle_fontawesome\Controller\SettingsFormAutocompleteController::handleAssetCdnUri'
+    _format: json
+    version: '{version}'
+  requirements:
+    _access: 'TRUE'
+##    _permisson: '??' # FIXME: permission breaks autocomplete
+  options:
+    parameters:
+      version: string
+
+icon_bundle_fontawesome.autocomplete.settings_form.metadata.cdn.uri:
+  path: '/admin/icon-bundle-fontawesome/autocomplete/settings-form/metadata/cdn/uri/{version}'
+  defaults:
+    _controller: '\Drupal\icon_bundle_fontawesome\Controller\SettingsFormAutocompleteController::handleMetadataCdnUri'
+    _format: json
+    version: '{version}'
+  requirements:
+    _access: 'TRUE'
+##    _permisson: '??' # FIXME: permission breaks autocomplete
+  options:
+    parameters:
+      version: string

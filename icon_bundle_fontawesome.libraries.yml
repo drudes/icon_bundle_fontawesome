@@ -1,0 +1,199 @@
+##############################################################################
+# The hook icon_bundle_fontawesome_library_info_alter() takes care of
+# substituting all predefined placeholders, such as ${asset.version}.
+# The placeholders refer the configuration settings from
+# `config/install/icon_bundle_fontawesome.settings.yml`
+##############################################################################
+
+# Self-hosted (old)
+icon_bundle_fontawesome.self.svg.all:
+  remote: &icon_bundle_fontawesome_remote https://use.fontawesome.com/releases/v6.1.1/fontawesome-free-6.1.1-web.zip
+  license: &icon_bundle_fontawesome_svg_license
+    name: CC BY 4.0
+    url: https://fontawesome.com/license
+    gpl-compatible: true
+  version: '${asset.version}'
+  js:
+    '${asset.self.path}/js/all.js': { minified: true }
+
+icon_bundle_fontawesome.self.svg.fontawesome:
+  version: '${asset.version}'
+  js:
+    '${asset.self.path}/js/fontawesome.js': { minified: true }
+
+icon_bundle_fontawesome.self.svg.solid:
+  version: '${asset.version}'
+  js:
+    '${asset.self.path}/js/solid.js': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.self.svg.fontawesome
+
+icon_bundle_fontawesome.self.svg.regular:
+  version: '${asset.version}'
+  js:
+    '${asset.self.path}/js/regular.js': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.self.svg.fontawesome
+
+icon_bundle_fontawesome.self.svg.light:
+  version: '${asset.version}'
+  js:
+    '${asset.self.path}/js/light.js': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.self.svg.fontawesome
+
+icon_bundle_fontawesome.self.svg.brands:
+  version: '${asset.version}'
+  js:
+    '${asset.self.path}/js/brands.js': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.self.svg.fontawesome
+
+icon_bundle_fontawesome.self.webfonts.all:
+  remote: *icon_bundle_fontawesome_remote
+  license: &icon_bundle_fontawesome_webfonts_license
+    name: SIL OFL 1.1
+    url: https://fontawesome.com/license
+    gpl-compatible: true
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.self.path}/css/all.css': { minified: true }
+
+icon_bundle_fontawesome.self.webfonts.fontawesome:
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.self.path}/css/fontawesome.css': { minified: true }
+
+icon_bundle_fontawesome.self.webfonts.solid:
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.self.path}/css/solid.css': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.self.webfonts.fontawesome
+
+icon_bundle_fontawesome.self.webfonts.regular:
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.self.path}/css/regular.css': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.self.webfonts.fontawesome
+
+icon_bundle_fontawesome.self.webfonts.light:
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.self.path}/css/light.css': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.self.webfonts.fontawesome
+
+icon_bundle_fontawesome.self.webfonts.brands:
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.self.path}/css/brands.css': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.self.webfonts.fontawesome
+
+
+# CDN (old)
+icon_bundle_fontawesome.cdn.svg.all:
+  remote: &icon_bundle_fontawesome_remote https://use.fontawesome.com/releases/v6.1.1/fontawesome-free-6.1.1-web.zip
+  license: &icon_bundle_fontawesome_svg_license
+    name: CC BY 4.0
+    url: https://fontawesome.com/license
+    gpl-compatible: true
+  version: &icon_bundle_fontawesome_version "6.1.1"
+  js:
+    '${asset.cdn.uri}/js/all.js': { minified: true }
+
+icon_bundle_fontawesome.cdn.svg.fontawesome:
+  version: '${asset.version}'
+  js:
+    '${asset.cdn.uri}/js/fontawesome.js': { minified: true }
+
+icon_bundle_fontawesome.cdn.svg.solid:
+  version: '${asset.version}'
+  js:
+    '${asset.cdn.uri}/js/solid.js': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.cdn.svg.fontawesome
+
+icon_bundle_fontawesome.cdn.svg.regular:
+  version: '${asset.version}'
+  js:
+    '${asset.cdn.uri}/js/regular.js': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.cdn.svg.fontawesome
+
+icon_bundle_fontawesome.cdn.svg.light:
+  version: '${asset.version}'
+  js:
+    '${asset.cdn.uri}/js/light.js': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.cdn.svg.fontawesome
+
+icon_bundle_fontawesome.cdn.svg.brands:
+  version: '${asset.version}'
+  js:
+    '${asset.cdn.uri}/js/brands.js': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.cdn.svg.fontawesome
+
+icon_bundle_fontawesome.cdn.webfonts.all:
+  remote: *icon_bundle_fontawesome_remote
+  license: &icon_bundle_fontawesome_webfonts_license
+    name: SIL OFL 1.1
+    url: https://fontawesome.com/license
+    gpl-compatible: true
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.cdn.uri}/css/all.css': { minified: true }
+
+icon_bundle_fontawesome.cdn.webfonts.fontawesome:
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.cdn.uri}/css/fontawesome.css': { minified: true }
+
+icon_bundle_fontawesome.cdn.webfonts.solid:
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.cdn.uri}/css/solid.css': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.cdn.webfonts.fontawesome
+
+icon_bundle_fontawesome.cdn.webfonts.regular:
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.cdn.uri}/css/regular.css': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.cdn.webfonts.fontawesome
+
+icon_bundle_fontawesome.cdn.webfonts.light:
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.cdn.uri}/css/light.css': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.cdn.webfonts.fontawesome
+
+icon_bundle_fontawesome.cdn.webfonts.brands:
+  version: '${asset.version}'
+  css:
+    theme:
+      '${asset.cdn.uri}/css/brands.css': { minified: true }
+  dependencies:
+    - icon_bundle_fontawesome/icon_bundle_fontawesome.cdn.webfonts.fontawesome
+
+# Kit (new)
+icon_bundle_fontawesome.kit:
+  version: '${asset.version}'
+  js:
+    '${asset.kit.uri}': { minified: true, attributes: { crossorigin: 'anonymous'} }

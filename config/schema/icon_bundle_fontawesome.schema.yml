@@ -1,0 +1,93 @@
+# Schema for the configuration files of the Font Awesome Bundle.
+
+icon_bundle_fontawesome.settings:
+  type: config_object
+  label: 'Font Awesome Settings'
+  mapping:
+    method:
+      type: string
+      label: 'Bundle method'
+      description: 'Controls what kind of HTML code is generated to represent Font Awesome icons in an HTML document.'
+    asset:
+      type: mapping
+      label: 'Asset settings'
+      description: >
+        Controls where the js/css libraries come from and what parts get
+        included in the page. The specified asset location is accessed by
+        client's browser.
+      mapping:
+        version:
+          type: string
+          label: 'Font Awesome version'
+          description: 'Used only by this form to enhance auto-completion of CDN URLs'
+        delivery:
+          type: string
+          label: 'Delivery method for the asset'
+        self:
+          type: mapping
+          mapping:
+            path:
+              type: path
+              label: 'Path to self-hosted asset'
+              description: 'Specifies "path" part of the URL pointing to the self-hosted Font Awesome asset'
+        cdn:
+          type: mapping
+          label: 'Settings for Content Delivery Network'
+          mapping:
+            uri:
+              type: uri
+              label: 'Base URL for CDN asset'
+        kit:
+          type: mapping
+          label: 'Settings for Font Awesome Kit'
+          mapping:
+            uri:
+              type: uri
+              label: 'Remote kit location'
+        use:
+          type: mapping
+          label: 'Partial selection of Font Awesome assets'
+          mapping:
+            solid:
+              type: boolean
+              label: 'Load Solid Icons'
+            regular:
+              type: boolean
+              label: 'Load Regular Icons'
+            light:
+              type: boolean
+              label: 'Load Light Icons'
+            brands:
+              type: boolean
+              label: 'Load Brand Icons'
+    metadata:
+      type: mapping
+      label: 'Metadata settings'
+      description: >
+        The metadata files are used by icon picker to discover existing icons.
+        The metadata location is accessed by the server.
+      mapping:
+        delivery:
+          type: string
+          label: 'Delivery method for metadata'
+        cdn:
+          type: mapping
+          label: 'Settings for Content Delivery Network'
+          mapping:
+            uri:
+              type: uri
+              label: 'Remote Font Awesome metadata location (CDN)'
+        self:
+          type: mapping
+          label: 'Settings for self-hosted metadata'
+          mapping:
+            path:
+              type: path
+              label: 'Local path on server pointing to metadata directory.'
+              description: >
+                May be absolute or relative (w.r.t. the document root).
+                Relative is more portable &mdash; it survives migrations with document
+                root change.
+    use_fa_icon_chooser:
+      type: boolean
+      label: 'Use the Font Awesome Icon Chooser component'

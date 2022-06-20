@@ -1,0 +1,21 @@
+{
+    "name": "drupal/icon_bundle_fontawesome",
+    "description": "Font Awesome Icon Bundle compatible with Icon Bundle API",
+    "type": "drupal-module",
+    "license": "GPL-2.0-of-later",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Paweł Tomulik",
+            "homepage": "https://drupal.org/u/ptomulik",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "drupal/core": "^8 || ^9",
+        "drupal/icon_bundle_api": "*"
+    },
+    "suggest": {
+        "npm-asset/fortawesome--fontawesome-free": "Provides Font Awesome Icon assets and metadata"
+    }
+}
