@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Drupal\icon_bundle_fontawesome\Plugin\IconBundle;
 
@@ -14,6 +16,5 @@ use Drupal\icon_bundle_api\IconBundleBase;
  *  icon_element = "fontawesome_icon",
  * )
  */
-class FontAwesomeBundle extends IconBundleBase
-{
+class FontAwesomeBundle extends IconBundleBase {
 }

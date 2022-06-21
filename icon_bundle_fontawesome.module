@@ -1,21 +1,25 @@
-<?php declare(strict_types=1);
+<?php
+
+/**
+ * @file
+ */
+
+declare(strict_types=1);
 
 use Drupal\icon_bundle_fontawesome\Hooks;
 
 /**
  * Implements hook_page_attachments().
  */
-function icon_bundle_fontawesome_page_attachments(array &$page): void
-{
-    \Drupal::classResolver(Hooks::class)->pageAttachments($page);
+function icon_bundle_fontawesome_page_attachments(array &$page): void {
+  \Drupal::classResolver(Hooks::class)->pageAttachments($page);
 }
 
 /**
  * Implements hook_library_info_alter().
  */
-function icon_bundle_fontawesome_library_info_alter(array &$libraries, string $extension): void
-{
-    \Drupal::classResolver(Hooks::class)->libraryInfoAlter($libraries, $extension);
+function icon_bundle_fontawesome_library_info_alter(array &$libraries, string $extension): void {
+  \Drupal::classResolver(Hooks::class)->libraryInfoAlter($libraries, $extension);
 }
 
 /**
@@ -26,9 +30,8 @@ function icon_bundle_fontawesome_library_info_alter(array &$libraries, string $e
  * @param mixed $theme
  * @param mixed $path
  */
-function icon_bundle_fontawesome_theme($existing, $type, $theme, $path): array
-{
-    return \Drupal::classResolver(Hooks::class)->theme($existing, $type, $theme, $path);
+function icon_bundle_fontawesome_theme($existing, $type, $theme, $path): array {
+  return \Drupal::classResolver(Hooks::class)->theme($existing, $type, $theme, $path);
 }
 
 /**
@@ -36,7 +39,6 @@ function icon_bundle_fontawesome_theme($existing, $type, $theme, $path): array
  *
  * @param mixed $variables
  */
-function icon_bundle_fontawesome_preprocess_fontawesome_icon(&$variables): void
-{
-    \Drupal::classResolver(Hooks::class)->preprocessFontAwesomeIcon($variables);
+function icon_bundle_fontawesome_preprocess_fontawesome_icon(&$variables): void {
+  \Drupal::classResolver(Hooks::class)->preprocessFontAwesomeIcon($variables);
 }
