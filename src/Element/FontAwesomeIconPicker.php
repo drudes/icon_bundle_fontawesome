@@ -195,7 +195,7 @@ class FontAwesomeIconPicker extends FormElement
     {
         $names = [];
         foreach (static::getFallbackValues() as $key => $value) {
-            $names[$key] = ElementHelper::nestedElementName($element['#parents'], $key);
+            $names[$key] = static::nestedElementName($element['#parents'], $key);
         }
 
         return $names;
@@ -239,5 +239,18 @@ class FontAwesomeIconPicker extends FormElement
         }
 
         return $options;
+    }
+
+    protected static function nestedElementName(array $parents, string $child): string
+    {
+        if (empty($parents)) {
+            return $child;
+        }
+
+        $parents[] = $child;
+
+        $root = array_shift($parents);
+
+        return $root.'['.implode('][', $parents).']';
     }
 }
