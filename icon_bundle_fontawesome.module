@@ -10,6 +10,8 @@ use Drupal\icon_bundle_fontawesome\Hooks;
 
 /**
  * Implements hook_page_attachments().
+ *
+ * @phpstan-param array<array-key,mixed> $page
  */
 function icon_bundle_fontawesome_page_attachments(array &$page): void {
   \Drupal::classResolver(Hooks::class)->pageAttachments($page);
@@ -17,6 +19,8 @@ function icon_bundle_fontawesome_page_attachments(array &$page): void {
 
 /**
  * Implements hook_library_info_alter().
+ *
+ * @phpstan-param array<array-key,mixed> $libraries
  */
 function icon_bundle_fontawesome_library_info_alter(array &$libraries, string $extension): void {
   \Drupal::classResolver(Hooks::class)->libraryInfoAlter($libraries, $extension);
@@ -29,6 +33,8 @@ function icon_bundle_fontawesome_library_info_alter(array &$libraries, string $e
  * @param mixed $type
  * @param mixed $theme
  * @param mixed $path
+ *
+ * @phpstan-return array<array-key,mixed>
  */
 function icon_bundle_fontawesome_theme($existing, $type, $theme, $path): array {
   return \Drupal::classResolver(Hooks::class)->theme($existing, $type, $theme, $path);

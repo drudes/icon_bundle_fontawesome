@@ -15,14 +15,14 @@ use Drupal\Core\TypedData\TypedDataInterface;
 trait FormDefaultsTrait {
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $form
    */
   protected function setFormDefaults(array &$form): void {
     $this->defaultsRecursiveWalkConfig($form);
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $form
    */
   protected function defaultsRecursiveWalkConfig(array &$form): void {
     $typed_config = $this->getTypedConfigManager()->get($this->getConfigId());
@@ -30,7 +30,7 @@ trait FormDefaultsTrait {
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $element
    */
   protected function defaultsRecursiveWalkMapping(array &$element, TraversableTypedDataInterface $mapping): void {
     foreach ($mapping as $key => $property) {
@@ -47,7 +47,7 @@ trait FormDefaultsTrait {
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $element
    */
   protected function defaultsVisitLeafNode(array &$element, TypedDataInterface $data): void {
     $this->defaultsVisitNode($element, $data);
@@ -61,14 +61,14 @@ trait FormDefaultsTrait {
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $element
    */
   protected function defaultsVisitNonLeafNode(array &$element, TypedDataInterface $data): void {
     $this->defaultsVisitNode($element, $data);
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $element
    */
   protected function defaultsVisitNode(array &$element, TypedDataInterface $data): void {
     $definition = $data->getDataDefinition();
@@ -77,11 +77,12 @@ trait FormDefaultsTrait {
   }
 
   /**
-   *
+   * @param mixed $value
+   * @phpstan-param array<array-key,mixed> $element
    */
   protected function defaultsSetTranslatableProperty(array &$element, string $key, $value): void {
     if ('' !== (string) $value && !array_key_exists($key, $element)) {
-      $element[$key] = $this->t($value);
+      $element[$key] = $this->t((string)$value);
     }
   }
 

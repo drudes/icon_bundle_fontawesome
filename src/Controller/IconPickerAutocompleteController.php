@@ -16,9 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  *
  */
-class IconPickerAutocompleteController extends ControllerBase implements ContainerInjectionInterface {
+final class IconPickerAutocompleteController extends ControllerBase implements ContainerInjectionInterface {
   /**
-   * @var string
+   * @var \Drupal\icon_bundle_fontawesome\Metadata\MetadataProviderInterface
    */
   protected $metadataProvider;
 
@@ -35,14 +35,14 @@ class IconPickerAutocompleteController extends ControllerBase implements Contain
   public static function create(ContainerInterface $container): static {
     $metadata_provider = $container->get('class_resolver')->getInstanceFromDefinition(MetadataProvider::class);
 
-    return new static($metadata_provider);
+    return new self($metadata_provider);
   }
 
   /**
    *
    */
   public function handleIcon(Request $request): JsonResponse {
-    if ('' === ($typed_word = AutocompleteHelper::getLastTag($request))) {
+    if ('' === ($typed_word = AutocompleteHelper::getLastWord($request))) {
       return new JsonResponse([]);
     }
 
@@ -133,7 +133,7 @@ class IconPickerAutocompleteController extends ControllerBase implements Contain
     ];
 
     if (empty($input = AutocompleteHelper::getInput($request))) {
-      return new JSonReponse([]);
+      return new JsonResponse([]);
     }
 
     $words = array_map('trim', explode(' ', $input));

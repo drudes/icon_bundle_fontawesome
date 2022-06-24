@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  *
  */
-class Hooks implements HooksInterface, ContainerInjectionInterface {
+final class Hooks implements HooksInterface, ContainerInjectionInterface {
   /**
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
@@ -31,11 +31,13 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
    *
    */
   public static function create(ContainerInterface $container): static {
-    return new static($container->get('config.factory'));
+    return new self($container->get('config.factory'));
   }
 
   /**
    * Implements the hook_page_attachments().
+   *
+   * @phpstan-param array<array-key,mixed> $page
    */
   public function pageAttachments(array &$page): void {
     $config = $this->getConfig();
@@ -50,6 +52,8 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
 
   /**
    * Implements the hook_library_info_alter().
+   *
+   * @phpstan-param array<array-key,mixed> $libraries
    */
   public function libraryInfoAlter(array &$libraries, string $extension): void {
     if ('icon_bundle_fontawesome' === $extension) {
@@ -65,6 +69,8 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
    * @param mixed $type
    * @param mixed $theme
    * @param mixed $path
+   *
+   * @phpstan-return array<array-key,mixed>
    */
   public function theme($existing, $type, $theme, $path): array {
     return [
@@ -76,6 +82,8 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
 
   /**
    * Implements the hook_preprocess_HOOK().
+   *
+   * @phpstan-param array<array-key,mixed> $variables
    */
   public function preprocessFontAwesomeIcon(array &$variables): void {
     $icon = $variables['element']['#icon'] ?? '';
@@ -109,7 +117,7 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
   }
 
   /**
-   *
+   * @phpstan-return array<string,mixed>
    */
   protected function getStyles(): array {
     $config = $this->getConfig();
@@ -123,7 +131,7 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $styles
    */
   protected function worthUsingAll(array $styles): bool {
     // FIXME: consider different behavior for free/pro ("all.css" may contain extra styles in pro version)
@@ -131,7 +139,7 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $page
    */
   protected function pageAttachmentsOld(array &$page, string $delivery): void {
     $method = $this->getConfig()->get('method');
@@ -153,7 +161,7 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $page
    */
   protected function pageAttachmentsKit(array &$page): void {
     $page['#attached']['library'][] = 'icon_bundle_fontawesome/icon_bundle_fontawesome.kit';
@@ -161,6 +169,11 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
 
   /**
    * Recursively substitute variables in string keys and values of &$array.
+   *
+   * @phpstan-template StringsArrayType of string[]
+   * @phpstan-param array<array-key,mixed> $array
+   * @phpstan-param StringsArrayType $patterns
+   * @phpstan-param StringsArrayType $replacements
    */
   protected static function substitute(array &$array, array $patterns, array $replacements, int $depth = 0): void {
     if ($depth > 64) {
@@ -192,7 +205,8 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $flat_array
+   * @phpstan-return array{0:string[],1:string[]}
    */
   protected static function makeSubstArrays(array $flat_array): array {
     $subst_arrays = [[], []];
@@ -210,14 +224,15 @@ class Hooks implements HooksInterface, ContainerInjectionInterface {
   }
 
   /**
-   *
+   * @phpstan-return array<string,mixed>
    */
   protected function getDotkeyedSettings(): array {
     return self::dotkeyed($this->getConfig()->getRawData());
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $array
+   * @phpstan-return array<string,mixed>
    */
   protected static function dotkeyed(array $array, string $parents = ''): array {
     $dotkeyed = [];

@@ -4,28 +4,32 @@ declare(strict_types=1);
 
 namespace Drupal\icon_bundle_fontawesome\Controller;
 
-use Drupal\Component\Utility\Tags;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- *
+ * @phpstan-type AutocompleteResultEntry array{
+ *  value: string,
+ *  label:\Drupal\Core\StringTranslation\TranslatableMarkup
+ * }
  */
 class AutocompleteHelper {
 
   /**
-   *
+   * @phpstan-param string[] $strings
+   * @phpstan-return AutocompleteResultEntry[]
    */
-  public static function filterByLastTag(Request $request, array $strings): array {
-    if ('' === ($typed_tag = self::getLastTag($request))) {
+  public static function filterByLastWord(Request $request, array $strings): array {
+    if ('' === ($typed_tag = self::getLastWord($request))) {
       return [];
     }
-    return static::filterByTag($typed_tag, $strings);
+    return static::filterByWord($typed_tag, $strings);
   }
 
   /**
-   *
+   * @phpstan-param string[] $strings
+   * @phpstan-return AutocompleteResultEntry[]
    */
-  public static function filterByTag(string $tag, array $strings): array {
+  public static function filterByWord(string $tag, array $strings): array {
     $response = [];
 
     foreach ($strings as $string) {
@@ -54,18 +58,17 @@ class AutocompleteHelper {
   }
 
   /**
-   *
+   * @phpstan-return string[]
    */
-  public static function getTags(Request $request): array {
+  public static function getWords(Request $request): array {
     $input = self::getInput($request);
-    return Tags::explode(mb_strtolower($input));
+    return preg_split('/\s+/', mb_strtolower($input));
   }
 
   /**
-   *
    */
-  public static function getLastTag(Request $request): string {
-    if (empty($tags = self::getTags($request))) {
+  public static function getLastWord(Request $request): string {
+    if (empty($tags = self::getWords($request))) {
       return '';
     }
 

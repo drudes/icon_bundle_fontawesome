@@ -17,8 +17,9 @@ interface MetadataLocatorInterface {
    * others. There is no way to reliably determine metadata location in case of
    * ``kit``, as we have no version information nor base location for assets.
    *
-   * @return Full path or url of the $file within metadata or ``null`` if the
-   *   path can't be determined
+   * @return null|string
+   *   Full path or url of the $file within metadata or ``null`` if the path
+   *   can't be determined.
    */
   public function getLocation(string $file = ''): ?string;
 

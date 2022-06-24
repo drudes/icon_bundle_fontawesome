@@ -16,8 +16,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class Drupal\icon_bundle_fontawesome\Form\FontAwesomeSettingsForm.
+ *
+ * @phpstan-type ValidateFormForm array{
+ *   asset?: array{
+ *    cdn?: array{
+ *      uri?: array{
+ *        '#title'?: \Drupal\Core\StringTranslation\TranslatableMarkup,
+ *      },
+ *    },
+ *    kit?: array{
+ *      uri?: array{
+ *        '#title'?:  \Drupal\Core\StringTranslation\TranslatableMarkup,
+ *      },
+ *    },
+ *   },
+ * }
  */
-class FontAwesomeSettingsForm extends ConfigFormBase {
+final class FontAwesomeSettingsForm extends ConfigFormBase {
   use FormDefaultsTrait;
   /**
    * @var string
@@ -41,12 +56,13 @@ class FontAwesomeSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    $app_root = $container->get('app.root');
+  public static function create(ContainerInterface $container): self {
+    /** @phpstan-var string $app_root */
+    $app_root = $container->getParameter('app.root');
     $config_factory = $container->get('config.factory');
     $typed_config_manager = $container->get('config.typed');
 
-    return new static($app_root, $config_factory, $typed_config_manager);
+    return new self($app_root, $config_factory, $typed_config_manager);
   }
 
   /**
@@ -65,6 +81,9 @@ class FontAwesomeSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-param array<array-key,mixed> $form
+   * @phpstan-return array<array-key,mixed>
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $definition = $this->typedConfigManager->get($this->getConfigId());
@@ -285,16 +304,20 @@ class FontAwesomeSettingsForm extends ConfigFormBase {
   }
 
   /**
-   *
+   * @phpstan-template MetadataElementType of mixed
+   * @phpstan-param array{metadata: MetadataElementType} $form
+   * @phpstan-return MetadataElementType
    */
-  public static function updateMetadataSettings(array &$form, FormStateInterface $form_state): array {
+  public static function updateMetadataSettings(array &$form) {
     return $form['metadata'];
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-param ValidateFormForm $form
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     $asset_delivery = $form_state->getValue(['asset', 'delivery']);
     $asset_cdn_uri = $form_state->getValue(['asset', 'cdn', 'uri']) ?? '';
     $asset_kit_uri = $form_state->getValue(['asset', 'kit', 'uri']) ?? '';
@@ -317,26 +340,10 @@ class FontAwesomeSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-param array<array-key,mixed> $form
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $values = $form_state->getValues();
-    // --
-    // --        // Load fontawesome libraries
-    // --        $library = $this->libraryDiscovery->getLibraryByName('icon_bundle_fontawesome', 'icon_bundle_fontawesome.svg');
-    // --
-    // --        // Default location of the library
-    // --        $default_location = 'https://use.fontawesome.com/releases/v'.$library['version'].'/';
-    // --
-    // --        $default_svg_location = $default_location.'js/all.js';
-    // --        $default_webfonts_location = $default_location.'css/all.css';
-    // --
-    // --        if ($values['asset']['delivery']) {
-    // --            if (empty($values['asset']['cdn']['uri'])) {
-    // --                $values['asset']['cdn']['uri'] = ('webfonts' == $values['method']) ? $default_webfonts_location : $default_svg_location;
-    // --            }
-    // --        }
-    // Save the settings
-    // --        $this->config('icon_bundle_fontawesome.settings')
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->configFactory->getEditable(static::getConfigId())
       ->set('method', $form_state->getValue(['method']))
       ->set('asset.delivery', $form_state->getValue(['asset', 'delivery']))
@@ -352,6 +359,7 @@ class FontAwesomeSettingsForm extends ConfigFormBase {
       ->set('metadata.self.path', $form_state->getValue(['metadata', 'self', 'path']))
       ->save();
 
+    // FIXME: phpstan doesn't know this function
     drupal_flush_all_caches();
 
     parent::submitForm($form, $form_state);
@@ -359,50 +367,11 @@ class FontAwesomeSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-return string[]
    */
-  protected function getEditableConfigNames() {
+  protected function getEditableConfigNames(): array {
     return [static::getConfigId()];
-  }
-
-  /**
-   *
-   */
-  protected function getConfigDataDefinition(string $name): DataDefinitionInterface {
-    return $this->getTypedConfig($name)->getDataDefinition();
-  }
-
-  /**
-   *
-   */
-  protected function getTypedConfig(string $name = ''): TypedDataInterface {
-    $typed_config = $this->typedConfigManager->get($this->getConfigId());
-
-    return '' === $name ? $typed_config : $typed_config->get($name);
-  }
-
-  /**
-   *
-   */
-  protected function getDataLabel(string $name, bool $translate = TRUE) {
-    return $this->translateIf($this->getConfigDataDefinition($name)->getLabel(), $translate);
-  }
-
-  /**
-   *
-   */
-  protected function getDataDescription(string $name, bool $translate = TRUE) {
-    return $this->translateIf($this->getConfigDataDefinition($name)->getDescription(), $translate);
-  }
-
-  /**
-   *
-   */
-  protected function translateIf(?string $string, bool $flag) {
-    if (NULL !== $string && $flag) {
-      $string = $this->t($string);
-    }
-
-    return $string;
   }
 
   /**

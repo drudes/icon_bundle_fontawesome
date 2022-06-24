@@ -23,7 +23,7 @@ class SettingsFormAutocompleteController extends ControllerBase {
       "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@{$version}",
     ];
 
-    return new JsonResponse(AutocompleteHelper::filterByLastTag($request, $well_known_uris));
+    return new JsonResponse(AutocompleteHelper::filterByLastWord($request, $well_known_uris));
   }
 
   /**
@@ -34,7 +34,7 @@ class SettingsFormAutocompleteController extends ControllerBase {
       "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@{$version}/metadata",
     ];
 
-    return new JsonResponse(AutocompleteHelper::filterByLastTag($request, $well_known_uris));
+    return new JsonResponse(AutocompleteHelper::filterByLastWord($request, $well_known_uris));
   }
 
   /**

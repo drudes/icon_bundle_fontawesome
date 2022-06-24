@@ -10,9 +10,18 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
+ * @phpstan-type IconDataInputEntry array{
+ *  label?: string,
+ *  styles?: string[],
+ *  aliases?: array{
+ *    names?: string[],
+ *  }
+ * }
  *
+ * @phpstan-import-type IconsDataArray from \Drupal\icon_bundle_fontawesome\Metadata\MetadataProviderInterface
+ * @phpstan-import-type IconsSearchArray from \Drupal\icon_bundle_fontawesome\Metadata\MetadataProviderInterface
  */
-class MetadataProvider implements MetadataProviderInterface, ContainerInjectionInterface {
+final class MetadataProvider implements MetadataProviderInterface, ContainerInjectionInterface {
   /**
    * @var MetadataLocatorInterface
    */
@@ -31,11 +40,11 @@ class MetadataProvider implements MetadataProviderInterface, ContainerInjectionI
   public static function create(ContainerInterface $container): static {
     $metadata_locator = MetadataLocator::create($container);
 
-    return new static($metadata_locator);
+    return new self($metadata_locator);
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getIconsDataArray(string $file = NULL): array {
     $file ??= 'icons.yml';
@@ -55,7 +64,7 @@ class MetadataProvider implements MetadataProviderInterface, ContainerInjectionI
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getIconsSearchArray(array $data_array): array {
     if (NULL === ($location_id = $data_array['_info']['location_id'] ?? NULL)) {
@@ -66,7 +75,7 @@ class MetadataProvider implements MetadataProviderInterface, ContainerInjectionI
   }
 
   /**
-   *
+   * @phpstan-return IconsSearchArray
    */
   public static function getCachedIconsSearchArray(array $data_array, string $location_id): array {
     $cache_id = 'icon_bundle_fontawesome_icon_search_array:' . $location_id;
@@ -86,6 +95,8 @@ class MetadataProvider implements MetadataProviderInterface, ContainerInjectionI
 
   /**
    * Get the icon data.
+   *
+   * @phpstan-return null|IconsDataArray
    */
   protected static function getCachedIconsDataArray(string $location, string $location_id, array $info): ?array {
     $cache_id = 'icon_bundle_fontawesome_icon_data_array:' . $location_id;
@@ -106,7 +117,7 @@ class MetadataProvider implements MetadataProviderInterface, ContainerInjectionI
   }
 
   /**
-   *
+   * @phpstan-return null|IconsDataArray
    */
   protected static function parseIconsDataArrayYamlFile(string $location, array $info): ?array {
     // Check if the icons.yml file exists.
@@ -118,7 +129,7 @@ class MetadataProvider implements MetadataProviderInterface, ContainerInjectionI
   }
 
   /**
-   *
+   * @phpstan-return null|IconsDataArray
    */
   protected static function parseIconsDataArrayYamlString(string $contents, array $info): ?array {
     try {
@@ -132,7 +143,8 @@ class MetadataProvider implements MetadataProviderInterface, ContainerInjectionI
   }
 
   /**
-   *
+   * @phpstan-param array<string,IconDataInputEntry> $array
+   * @phpstan-return IconsDataArray
    */
   protected static function parseIconsDataArray(array $array, array $info): array {
     $data_array = ['_info' => $info];
@@ -159,7 +171,7 @@ class MetadataProvider implements MetadataProviderInterface, ContainerInjectionI
   }
 
   /**
-   *
+   * @phpstan-return IconsSearchArray
    */
   protected static function buildIconsSearchArray(array $data_array): array {
     $search_array = [];

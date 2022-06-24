@@ -10,6 +10,10 @@ use Drupal\Core\Config\ConfigFactoryInterface;
  *
  */
 class AssetLibrariesFinderCallback {
+
+  /**
+   * @var string[]
+   */
   protected static $requiredFiles = [
     'js/all.js',
     'js/all.min.js',

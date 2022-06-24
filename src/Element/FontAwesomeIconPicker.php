@@ -11,13 +11,72 @@ use Drupal\icon_bundle_fontawesome\Metadata\MetadataProvider;
 
 /**
  * @FormElement("fontawesome_icon_picker")
+ *
+ * @phpstan-import-type IconsDataArray from \Drupal\icon_bundle_fontawesome\Metadata\MetadataProviderInterface
+ *
+ * @phpstan-type GetInfoRetval array{
+ *  '#input': bool,
+ *  '#process': callable[],
+ *  '#value_callback': callable,
+ * }
+ *
+ * @phpstan-type GetDefaultValuesElement array{
+ *  '#default_value'?: array{
+ *    icon?: string,
+ *    style?: string,
+ *    wrapper?: 'i'|'span',
+ *    wrapper_class?: string,
+ *  },
+ * }
+ *
+ * @phpstan-type GetDefaultValuesRetval array{
+ *  icon: string,
+ *  style: string,
+ *  wrapper: string,
+ *  wrapper_class: string,
+ * }
+ *
+ * @phpstan-type ProcessFontAwesomeIconPickerElement array{
+ *  '#parents': string[],
+ *  '#default_value'?: array{
+ *    icon?: string,
+ *    style?: string,
+ *    wrapper?: 'i'|'span',
+ *    wrapper_class?: string,
+ *  },
+ *  '#prefix'?: string,
+ *  '#suffix'?: string,
+ *  '#icon'?: array<string,mixed>,
+ *  '#style'?: array<string,mixed>,
+ *  '#wrapper'?: array<string,mixed>,
+ *  '#wrapper_class'?: array<string,mixed>,
+ * }
+ *
+ * @phpstan-type ProcessFontAwesomeIconPickerRetval array{
+ *  '#parents': string[],
+ *  '#default_value'?: array{
+ *    icon?: string,
+ *    style?: string,
+ *    wrapper?: 'i'|'span',
+ *    wrapper_class?: string,
+ *  },
+ *  '#tree': bool,
+ *  '#prefix': string,
+ *  '#suffix': string,
+ *  '#icon'?: array<string,mixed>,
+ *  '#style'?: array<string,mixed>,
+ *  '#wrapper'?: array<string,mixed>,
+ *  '#wrapper_class'?: array<string,mixed>,
+ * }
  */
 class FontAwesomeIconPicker extends FormElement {
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-return GetInfoRetval
    */
-  public function getInfo() {
+  public function getInfo(): array {
     $class = static::class;
 
     return [
@@ -30,9 +89,10 @@ class FontAwesomeIconPicker extends FormElement {
   }
 
   /**
-   *
+   * @phpstan-param ProcessFontAwesomeIconPickerElement $element
+   * @phpstan-return ProcessFontAwesomeIconPickerRetval
    */
-  public static function processFontAwesomeIconPicker(&$element, FormStateInterface $form_state, &$form) {
+  public static function processFontAwesomeIconPicker(array $element, FormStateInterface $form_state) {
     $element_wrapper_id = implode('-', $element['#parents']) . '-fontawesome_icon_spec-wrapper';
 
     $element['#tree'] = TRUE;
@@ -174,7 +234,10 @@ class FontAwesomeIconPicker extends FormElement {
   }
 
   /**
-   *
+   * @phpstan-template InputType of mixed
+   * @phpstan-param GetDefaultValuesElement $element
+   * @phpstan-param InputType $input
+   * @phpstan-return GetDefaultValuesRetval|InputType
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if (FALSE === $input) {
@@ -185,9 +248,10 @@ class FontAwesomeIconPicker extends FormElement {
   }
 
   /**
-   *
+   * @phpstan-param array<string,mixed> $form
+   * @phpstan-return mixed
    */
-  public static function updateFormElement(array &$form, FormStateInterface $form_state): array {
+  public static function updateFormElement(array &$form, FormStateInterface $form_state) {
     // $triggering_element is a first-level sub-element of the $element ($element['icon'] in fact)
     $triggering_element = $form_state->getTriggeringElement();
 
@@ -199,7 +263,8 @@ class FontAwesomeIconPicker extends FormElement {
   }
 
   /**
-   *
+   * @phpstan-param array{'#parents': string[]} $element
+   * @phpstan-return array<string, string>
    */
   protected static function getNestedElementNames(array $element): array {
     $names = [];
@@ -211,7 +276,8 @@ class FontAwesomeIconPicker extends FormElement {
   }
 
   /**
-   *
+   * @phpstan-param GetDefaultValuesElement $element
+   * @phpstan-return GetDefaultValuesRetval
    */
   protected static function getDefaultValues(array $element): array {
     $fallback_values = self::getFallbackValues();
@@ -221,7 +287,12 @@ class FontAwesomeIconPicker extends FormElement {
   }
 
   /**
-   *
+   * @phpstan-return array{
+   *  icon: '',
+   *  style: '',
+   *  wrapper: 'i',
+   *  wrapper_class: '',
+   * }
    */
   protected static function getFallbackValues(): array {
     return [
@@ -233,7 +304,7 @@ class FontAwesomeIconPicker extends FormElement {
   }
 
   /**
-   *
+   * @phpstan-return IconsDataArray
    */
   protected static function getIconsDataArray(): array {
     $metadata_provider = \Drupal::classResolver(MetadataProvider::class);
@@ -242,7 +313,9 @@ class FontAwesomeIconPicker extends FormElement {
   }
 
   /**
-   *
+   * @phpstan-param IconsDataArray $icons_data_array
+   * @phpstan-param mixed $icon_key
+   * @phpstan-return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
    */
   protected static function iconStyleOptions(array $icons_data_array, $icon_key): array {
     $options = [];
@@ -259,7 +332,7 @@ class FontAwesomeIconPicker extends FormElement {
   }
 
   /**
-   *
+   * @phpstan-param string[] $parents
    */
   protected static function nestedElementName(array $parents, string $child): string {
     if (empty($parents)) {

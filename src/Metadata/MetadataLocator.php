@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  *
  */
-class MetadataLocator implements MetadataLocatorInterface, ContainerInjectionInterface {
+final class MetadataLocator implements MetadataLocatorInterface, ContainerInjectionInterface {
   /**
    * @var string
    */
@@ -21,11 +21,12 @@ class MetadataLocator implements MetadataLocatorInterface, ContainerInjectionInt
 
   /**
    * @var array
+   * @phpstan-var array<array-key,mixed>
    */
   protected $settings;
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $settings
    */
   public function __construct(string $app_root, array $settings) {
     $this->appRoot = $app_root;
@@ -33,10 +34,10 @@ class MetadataLocator implements MetadataLocatorInterface, ContainerInjectionInt
   }
 
   /**
-   *
+   * @phpstan-param array<array-key,mixed> $overrides
    */
   public static function create(ContainerInterface $container, array $overrides = []): static {
-    $app_root = $container->get('app.root');
+    $app_root = $container->getParameter('app.root');
     $config_factory = $container->get('config.factory');
 
     return static::createFromConfig($app_root, $config_factory, $overrides);
@@ -44,16 +45,17 @@ class MetadataLocator implements MetadataLocatorInterface, ContainerInjectionInt
 
   /**
    *
+   * @phpstan-param array<array-key,mixed> $overrides
    */
   public static function createFromConfig(string $app_root, ConfigFactoryInterface $config_factory, array $overrides = []): static {
     $config = $config_factory->get('icon_bundle_fontawesome.settings');
     $settings = NestedArray::mergeDeep($config->getRawData(), $overrides);
 
-    return new static($app_root, $settings);
+    return new self($app_root, $settings);
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getLocation(string $file = ''): ?string {
     switch ($this->settings['metadata']['delivery']) {
@@ -94,7 +96,7 @@ class MetadataLocator implements MetadataLocatorInterface, ContainerInjectionInt
   /**
    *
    */
-  protected function getLocationAsset(string $file): string {
+  protected function getLocationAsset(string $file): ?string {
     switch ($this->settings['asset']['delivery']) {
       case 'cdn':
         return $this->getLocationAssetCdn($file);

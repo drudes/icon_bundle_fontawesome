@@ -13,8 +13,10 @@ class FontAwesomeIcon extends RenderElement {
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-return array{'#theme': string}
    */
-  public function getInfo() {
+  public function getInfo(): array {
     return [
       '#theme' => 'fontawesome_icon',
     ];
