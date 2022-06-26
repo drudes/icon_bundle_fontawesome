@@ -10,6 +10,7 @@ namespace Drupal\icon_bundle_fontawesome\Utility;
 class IconHelper {
   /**
    * @var array
+   * @phpstan-var array<string,string>
    */
   public static $cssStyleClassAliases = [
     'solid'   => 'fas',

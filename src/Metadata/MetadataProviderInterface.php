@@ -16,8 +16,8 @@ namespace Drupal\icon_bundle_fontawesome\Metadata;
  * }
  *
  *
- * @phpstan-type IconsDataArray array<string,IconDataEntry>
- * @phpstan-type IconsSearchArray array<string,string[]>
+ * @phpstan-type IconsDataArray array<array-key,IconDataEntry>
+ * @phpstan-type IconsSearchArray array<array-key,string[]>
  */
 interface MetadataProviderInterface {
 

@@ -75,6 +75,7 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
   }
 
   /**
+   * @phpstan-param IconsDataArray $data_array
    * @phpstan-return IconsSearchArray
    */
   public static function getCachedIconsSearchArray(array $data_array, string $location_id): array {
@@ -96,6 +97,7 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
   /**
    * Get the icon data.
    *
+   * @phpstan-param array<array-key,mixed> $info
    * @phpstan-return null|IconsDataArray
    */
   protected static function getCachedIconsDataArray(string $location, string $location_id, array $info): ?array {
@@ -117,6 +119,7 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
   }
 
   /**
+   * @phpstan-param array<array-key,mixed> $info
    * @phpstan-return null|IconsDataArray
    */
   protected static function parseIconsDataArrayYamlFile(string $location, array $info): ?array {
@@ -129,6 +132,7 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
   }
 
   /**
+   * @phpstan-param array<array-key,mixed> $info
    * @phpstan-return null|IconsDataArray
    */
   protected static function parseIconsDataArrayYamlString(string $contents, array $info): ?array {
@@ -144,6 +148,7 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
 
   /**
    * @phpstan-param array<string,IconDataInputEntry> $array
+   * @phpstan-param array<array-key,mixed> $info
    * @phpstan-return IconsDataArray
    */
   protected static function parseIconsDataArray(array $array, array $info): array {
@@ -171,6 +176,7 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
   }
 
   /**
+   * @phpstan-param IconsDataArray $data_array
    * @phpstan-return IconsSearchArray
    */
   protected static function buildIconsSearchArray(array $data_array): array {
