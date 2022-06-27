@@ -7,7 +7,7 @@ namespace Drupal\icon_bundle_fontawesome\Metadata;
 /**
  *
  */
-interface MetadataLocatorInterface {
+interface MetadataLocatorInterface extends CacheableDependencyInterface {
 
   /**
    * Returns a path to $file withing metadata path.

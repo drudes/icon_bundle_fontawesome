@@ -21,7 +21,6 @@ final class FontAwesomeIconsMetadata implements FontAwesomeIconsMetadataInterfac
 
   /**
    * @phpstan-param IconsDataArray $icons_data_array
-   * @phpstan-param IconsSearchArray $icons_search_array
    */
   public function __construct(string $id, array $icons_data_array) {
     $this->id = $id;
@@ -40,5 +39,26 @@ final class FontAwesomeIconsMetadata implements FontAwesomeIconsMetadataInterfac
    */
   public function getIconsDataArray(): array {
     return $this->iconsDataArray;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts(): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags(): array {
+    return [];
   }
 }
