@@ -49,12 +49,12 @@ final class IconPickerAutocompleteController extends ControllerBase implements C
     $response = [];
 
     // Get the icon array.
-    $icon_data_array = $this->metadataProvider->getIconsDataArray();
-    $icon_search_array = $this->metadataProvider->getIconsSearchArray($icon_data_array);
-    $icon_keys = $icon_search_array[$typed_word] ?? [];
+    $icons_data_array = $this->metadataProvider->getIconsDataArray();
+    $icons_search_array = $this->metadataProvider->getIconsSearchArray();
+    $icons_keys = $icons_search_array[$typed_word] ?? [];
 
-    foreach ($icon_keys as $icon_key) {
-      if (NULL !== ($icon_data = $icon_data_array[$icon_key] ?? NULL)) {
+    foreach ($icons_keys as $icon_key) {
+      if (NULL !== ($icon_data = $icons_data_array[$icon_key] ?? NULL)) {
         $label_styles = [];
         foreach ($icon_data['styles'] as $style) {
           $label_styles[] = t('<i class=":prefix fa-:icon fa-fw"></i>', [

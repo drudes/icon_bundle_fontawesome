@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\icon_bundle_fontawesome\Metadata;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
+
 /**
  * @phpstan-type IconDataEntry array{
  *  name: string,
@@ -15,21 +17,19 @@ namespace Drupal\icon_bundle_fontawesome\Metadata;
  *  }
  * }
  *
- *
  * @phpstan-type IconsDataArray array<array-key,IconDataEntry>
  * @phpstan-type IconsSearchArray array<array-key,string[]>
  */
-interface MetadataProviderInterface {
+interface MetadataProviderInterface extends CacheableDependencyInterface {
 
   /**
    * @phpstan-return IconsDataArray
    */
-  public function getIconsDataArray(string $file = NULL): array;
+  public function getIconsDataArray(): array;
 
   /**
-   * @phpstan-param IconsDataArray $icons_data_array
    * @phpstan-return IconsSearchArray
    */
-  public function getIconsSearchArray(array $icons_data_array): array;
+  public function getIconsSearchArray(): array;
 
 }

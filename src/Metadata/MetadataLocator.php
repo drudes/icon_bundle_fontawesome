@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\icon_bundle_fontawesome\Metadata;
 
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+//--use Drupal\Component\Utility\NestedArray;
+//--use Drupal\Core\Config\ConfigFactoryInterface;
+//--use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+//--use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  *
  */
-final class MetadataLocator implements MetadataLocatorInterface, ContainerInjectionInterface {
+final class MetadataLocator implements MetadataLocatorInterface {
+
   /**
    * @var string
    */
@@ -33,26 +34,33 @@ final class MetadataLocator implements MetadataLocatorInterface, ContainerInject
     $this->settings = $settings;
   }
 
-  /**
-   * @phpstan-param array<array-key,mixed> $overrides
-   */
-  public static function create(ContainerInterface $container, array $overrides = []): static {
-    $app_root = $container->getParameter('app.root');
-    $config_factory = $container->get('config.factory');
-
-    return static::createFromConfig($app_root, $config_factory, $overrides);
-  }
-
-  /**
-   *
-   * @phpstan-param array<array-key,mixed> $overrides
-   */
-  public static function createFromConfig(string $app_root, ConfigFactoryInterface $config_factory, array $overrides = []): static {
-    $config = $config_factory->get('icon_bundle_fontawesome.settings');
-    $settings = NestedArray::mergeDeep($config->getRawData(), $overrides);
-
-    return new self($app_root, $settings);
-  }
+//--  /**
+//--   * @phpstan-param array<array-key,mixed> $overrides
+//--   */
+//--  public static function create(ContainerInterface $container, array $overrides = []): static {
+//--    $app_root = $container->getParameter('app.root');
+//--    $config_factory = $container->get('config.factory');
+//--
+//--    return static::createFromConfig($app_root, $config_factory, $overrides);
+//--  }
+//--
+//--  /**
+//--   *
+//--   * @phpstan-param array<array-key,mixed> $overrides
+//--   */
+//--  public static function createFromConfig(string $app_root, ConfigFactoryInterface $config_factory, array $overrides = []): static {
+//--    $config_key = 'icon_bundle_fontawesome.settings';
+//--    $config = $config_factory->get($config_key);
+//--    $settings = $config->getRawData();
+//--    if (!empty($overrides)) {
+//--      $locator = new self($app_root, NestedArray::mergeDeep($settings, $overrides));
+//--      $locator->mergeCacheMaxAges(0); // uncacheable
+//--    } else {
+//--      $locator = new self($app_root, $settings);
+//--    }
+//--    $locator->addCacheTags(['config:' . $config_key]);
+//--    return $locator;
+//--  }
 
   /**
    * {@inheritdoc}
