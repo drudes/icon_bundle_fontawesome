@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\icon_bundle_fontawesome\Metadata;
 
-use Drupal\Core\Cache\CacheableDependencyInterface;
-
 /**
  * @phpstan-type IconDataEntry array{
  *  name: string,
@@ -20,7 +18,7 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
  * @phpstan-type IconsDataArray array<array-key,IconDataEntry>
  * @phpstan-type IconsSearchArray array<array-key,string[]>
  */
-interface MetadataProviderInterface extends CacheableDependencyInterface {
+interface MetadataProviderInterface {
 
   /**
    * @phpstan-return IconsDataArray

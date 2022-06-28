@@ -34,34 +34,6 @@ final class MetadataLocator implements MetadataLocatorInterface {
     $this->settings = $settings;
   }
 
-//--  /**
-//--   * @phpstan-param array<array-key,mixed> $overrides
-//--   */
-//--  public static function create(ContainerInterface $container, array $overrides = []): static {
-//--    $app_root = $container->getParameter('app.root');
-//--    $config_factory = $container->get('config.factory');
-//--
-//--    return static::createFromConfig($app_root, $config_factory, $overrides);
-//--  }
-//--
-//--  /**
-//--   *
-//--   * @phpstan-param array<array-key,mixed> $overrides
-//--   */
-//--  public static function createFromConfig(string $app_root, ConfigFactoryInterface $config_factory, array $overrides = []): static {
-//--    $config_key = 'icon_bundle_fontawesome.settings';
-//--    $config = $config_factory->get($config_key);
-//--    $settings = $config->getRawData();
-//--    if (!empty($overrides)) {
-//--      $locator = new self($app_root, NestedArray::mergeDeep($settings, $overrides));
-//--      $locator->mergeCacheMaxAges(0); // uncacheable
-//--    } else {
-//--      $locator = new self($app_root, $settings);
-//--    }
-//--    $locator->addCacheTags(['config:' . $config_key]);
-//--    return $locator;
-//--  }
-
   /**
    * {@inheritdoc}
    */

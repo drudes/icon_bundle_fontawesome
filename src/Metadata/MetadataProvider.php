@@ -6,8 +6,9 @@ namespace Drupal\icon_bundle_fontawesome\Metadata;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
 use Drupal\Core\Cache\UseCacheBackendTrait;
-use Drupal\Core\Cache\RefineableCacheableDependencyTrait;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -26,25 +27,32 @@ use Symfony\Component\Yaml\Yaml;
  * @phpstan-import-type IconsDataArray from \Drupal\icon_bundle_fontawesome\Metadata\MetadataProviderInterface
  * @phpstan-import-type IconsSearchArray from \Drupal\icon_bundle_fontawesome\Metadata\MetadataProviderInterface
  */
-final class MetadataProvider implements MetadataProviderInterface, ContainerInjectionInterface {
+final class MetadataProvider implements MetadataProviderInterface, ContainerInjectionInterface, CacheableDependencyInterface {
 
-  use UseBackendCacheTrait;
-  use RefineableCacheableDependencyTrait;
+  use UseCacheBackendTrait;
+  use RefinableCacheableDependencyTrait;
 
   /**
    * @var MetadataLocatorInterface
    */
   protected $metadataLocator;
 
-//--  /**
-//--   * @var CacheBackendInterface
-//--   */
-//--  protected $cacheBackend;
-
   /**
    * @var string
    */
   protected $cacheKey;
+
+  /**
+   * @var null|array
+   * @phpstan-var null|IconsDataArray
+   */
+  protected $iconsDataArray;
+
+  /**
+   * @var null|array
+   * @phpstan-var null|IconsSearchArray
+   */
+  protected $iconsSearchArray;
 
   /**
    *
@@ -53,25 +61,26 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
     $this->metadataLocator = $metadata_locator;
     $this->cacheBackend = $cache_backend;
     $this->cacheKey = $cache_key;
+    $this->iconsDataArray = null;
+    $this->iconsSearchArray = null;
   }
 
   /**
    *
    */
   public static function create(ContainerInterface $container): self {
+    $app_root = $container->getParameter('app.root');
     $config_factory = $container->get('config.factory');
     $cache_backend = $container->get('cache.data');
-    return self::createFromConfig($config_factory, $cache_backend);
+    return self::createFromConfig($app_root, $config_factory, $cache_backend);
   }
 
-  public static function createFromConfig(ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend): self {
+  public static function createFromConfig(string $app_root, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend): self {
     $config_key = 'icon_bundle_fontawesome.settings';
     $config = $config_factory->get($config_key);
-    $metadata_locator = new MetadataLocator($config->getRawData());
+    $metadata_locator = new MetadataLocator($app_root, $config->getRawData());
     $metadata_provider = new self($metadata_locator, $cache_backend, 'icon_bundle_fontawesome:metadata');
-    $metadata_provider->cacheTags = [
-      'config:' . $config_key,
-    ];
+    $metadata_provider->addCacheTags(['config:' . $config_key]);
     return $metadata_provider;
   }
 
@@ -79,57 +88,143 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
    * {@inheritdoc}
    */
   public function getIconsDataArray(): array {
-    if (NULL === ($location = $this->metadataLocator->getLocation('icons.yml'))) {
-      return [];
-    }
-
-    $cache_id = $this->cacheKey . ':icons_data_array';
-    $cache_max_age = $this->getCacheMaxAge();
-
-    if (0 === $cache_max_age || !($cache = $this->cacheBackend->get($cache_id))) {
-      if (NULL === ($data_array = self::parseIconsDataArrayYamlFile($location))) {
+    if (!($icons_data_array = $this->getCachedIconsDataArray())) {
+      if (NULL === ($location = $this->metadataLocator->getLocation('icons.yml'))) {
+        return [];
+      }
+      if (NULL === ($icons_data_array = self::parseIconsDataArrayYamlFile($location))) {
         // We don't cache on error. Empty arrays are not interesting.
         return [];
       }
-      if (0 !== $cache_max_age) {
-        $cache_tags = Cache::mergeTags($this->getCacheTags(), [ $cache_id ]);
-        $this->cacheBackend->set($cache_id, $data_array, $cache_max_age, $cache_tags);
-      }
+      $this->setCachedIconsDataArray($icons_data_array);
     }
-    else {
-      $data_array = (array)$cache->data;
-    }
-
-    return $data_array;
+    return $icons_data_array;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getIconsSearchArray(): array {
-    $cache_id = $this->cacheKey . ':icons_search_array';
-    $cache_max_age = $this->getCacheMaxAge();
-    if (0 === $cache_max_age || !($cache = $this->cacheBackend->get($cache_id))) {
-      $data_array = $this->getIconsDataArray();
-      $search_array = self::buildIconsSearchArray($data_array);
-
-      if (0 !== $cache_max_age) {
-        $cache_tags = Cache::mergeTags($this->getCacheTags(), [
-          'icon_bundle_fontawesome.metadata:icons_data_array',
-          $cache_id,
-        ]);
-        $this->cacheBackend->set($cache_id, $search_array, $cache_max_age, $cache_tags);
+    if (!($icons_search_array = $this->getCachedIconsSearchArray())) {
+      if ([] === ($icons_data_array = $this->getIconsDataArray())) {
+        // We don't cache on error. Empty arrays are not interesting.
+        return [];
       }
+      $icons_search_array = self::buildIconsSearchArray($icons_data_array);
+      $this->setCachedIconsSearchArray($icons_search_array);
     }
-    else {
-      $search_array = (array) $cache->data;
-    }
-
-    return $search_array;
+    return $icons_search_array;
   }
 
   /**
-   * @phpstan-param array<array-key,mixed> $info
+   *
+   */
+  public function getIconsDataArrayCacheId(): string {
+    return $this->cacheKey . ':icons_data_array';
+  }
+
+  /**
+   *
+   */
+  public function getIconsSearchArrayCacheId(): string {
+    return $this->cacheKey . ':icons_search_array';
+  }
+
+  /**
+   * @phpstan-return string[]
+   */
+  public function getIconsDataArrayCacheTags(): array {
+    return Cache::mergeTags($this->getCacheTags(), [$this->getIconsDataArrayCacheId()]);
+  }
+
+  /**
+   * @phpstan-return string[]
+   */
+  public function getIconsSearchArrayCacheTags(): array {
+    return Cache::mergeTags($this->getIconsDataArrayCacheTags(), [$this->getIconsSearchArrayCacheId()]);
+  }
+
+  /**
+   *
+   */
+  public function clearCachedIconsDataArray(): void {
+    if ($this->cacheBackend) {
+      if (($tags = $this->getIconsDataArrayCacheTags())) {
+        Cache::invalidateTags($tags);
+      }
+    }
+    $this->iconsDataArray = NULL;
+  }
+
+  /**
+   *
+   */
+  public function clearCachedIconsSearchArray(): void {
+    if ($this->cacheBackend) {
+      if (($tags = $this->getIconsSearchArrayCacheTags())) {
+        Cache::invalidateTags($tags);
+      }
+    }
+    $this->iconsSearchArray = NULL;
+  }
+
+  /**
+   */
+  public function useCaches(bool $use_caches = FALSE) {
+    $this->useCaches = $use_caches;
+    if (!$use_caches) {
+      $this->iconsDataArray = NULL;
+      $this->iconsSearchArray = NULL;
+    }
+  }
+
+  /**
+   * @phpstan-return null|IconsDataArray
+   */
+  protected function getCachedIconsDataArray(): ?array {
+    if (!isset($this->iconsDataArray) && ($cache = $this->cacheGet($this->getIconsDataArrayCacheId()))) {
+      $this->iconsDataArray = (array)$cache->data;
+    }
+    return $this->iconsDataArray;
+  }
+
+  /**
+   * @phpstan-return null|IconsSearchArray
+   */
+  protected function getCachedIconsSearchArray(): ?array {
+    if (!isset($this->iconsSearchArray) && ($cache = $this->cacheGet($this->getIconsSearchArrayCacheId()))) {
+      $this->iconsSearchArray = (array)$cache->data;
+    }
+    return $this->iconsSearchArray;
+  }
+
+  /**
+   * @phpstan-param IconsDataArray $icons_data_array
+   */
+  protected function setCachedIconsDataArray(array $icons_data_array): void {
+    $this->cacheSet(
+      $this->getIconsDataArrayCacheId(),
+      $icons_data_array,
+      $this->getCacheMaxAge(),
+      $this->getIconsDataArrayCacheTags()
+    );
+    $this->iconsDataArray = $icons_data_array;
+  }
+
+  /**
+   * @phpstan-param IconsSearchArray $icons_search_array
+   */
+  protected function setCachedIconsSearchArray(array $icons_search_array): void {
+    $this->cacheSet(
+      $this->getIconsSearchArrayCacheId(),
+      $icons_search_array,
+      $this->getCacheMaxAge(),
+      $this->getIconsSearchArrayCacheTags()
+    );
+    $this->iconsSearchArray = $icons_search_array;
+  }
+
+  /**
    * @phpstan-return null|IconsDataArray
    */
   protected static function parseIconsDataArrayYamlFile(string $location): ?array {
@@ -142,7 +237,6 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
   }
 
   /**
-   * @phpstan-param array<array-key,mixed> $info
    * @phpstan-return null|IconsDataArray
    */
   protected static function parseIconsDataArrayYamlString(string $contents): ?array {
@@ -158,7 +252,6 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
 
   /**
    * @phpstan-param array<string,IconDataInputEntry> $array
-   * @phpstan-param array<array-key,mixed> $info
    * @phpstan-return IconsDataArray
    */
   protected static function parseIconsDataArray(array $array): array {

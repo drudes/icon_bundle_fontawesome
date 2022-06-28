@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\icon_bundle_fontawesome\Form;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -86,7 +87,7 @@ final class FontAwesomeSettingsForm extends ConfigFormBase {
    * @phpstan-return array<array-key,mixed>
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $definition = $this->typedConfigManager->get($this->getConfigId());
+    $definition = $this->typedConfigManager->get(static::getConfigId());
     $config = $this->configFactory->get(static::getConfigId());
 
     $sample = [
@@ -257,7 +258,8 @@ final class FontAwesomeSettingsForm extends ConfigFormBase {
 
     $metadata_delivery = $form_state->getValue(['metadata', 'delivery']) ?? $config->get('metadata.delivery');
     if ('auto' === $metadata_delivery || 'self' === $metadata_delivery) {
-      $metadata_locator = MetadataLocator::createFromConfig($this->appRoot, $this->configFactory, $form_state->getValues());
+      $metadata_locator_settings = NestedArray::mergeDeep($config->getRawData(), $form_state->getValues());
+      $metadata_locator = new MetadataLocator($this->appRoot, $metadata_locator_settings);
       $form['metadata']['delivery']['#description'] = $this->t('Current location: :location', [
         ':location' => $metadata_locator->getLocation(),
       ]);
@@ -358,9 +360,6 @@ final class FontAwesomeSettingsForm extends ConfigFormBase {
       ->set('metadata.cdn.uri', $form_state->getValue(['metadata', 'cdn', 'uri']))
       ->set('metadata.self.path', $form_state->getValue(['metadata', 'self', 'path']))
       ->save();
-
-    // FIXME: phpstan doesn't know this function
-    drupal_flush_all_caches();
 
     parent::submitForm($form, $form_state);
   }
