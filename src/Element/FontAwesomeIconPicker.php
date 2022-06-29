@@ -26,6 +26,7 @@ use Drupal\icon_bundle_fontawesome\Metadata\MetadataProvider;
  *    style?: string,
  *    wrapper?: 'i'|'span',
  *    wrapper_class?: string,
+ *    wrapper_style?: string,
  *  },
  * }
  *
@@ -34,6 +35,7 @@ use Drupal\icon_bundle_fontawesome\Metadata\MetadataProvider;
  *  style: string,
  *  wrapper: string,
  *  wrapper_class: string,
+ *  wrapper_style: string,
  * }
  *
  * @phpstan-type ProcessFontAwesomeIconPickerElement array{
@@ -43,6 +45,7 @@ use Drupal\icon_bundle_fontawesome\Metadata\MetadataProvider;
  *    style?: string,
  *    wrapper?: 'i'|'span',
  *    wrapper_class?: string,
+ *    wrapper_style?: string,
  *  },
  *  '#prefix'?: string,
  *  '#suffix'?: string,
@@ -50,6 +53,7 @@ use Drupal\icon_bundle_fontawesome\Metadata\MetadataProvider;
  *  '#style'?: array<string,mixed>,
  *  '#wrapper'?: array<string,mixed>,
  *  '#wrapper_class'?: array<string,mixed>,
+ *  '#wrapper_style'?: array<string,mixed>,
  * }
  *
  * @phpstan-type ProcessFontAwesomeIconPickerRetval array{
@@ -59,6 +63,7 @@ use Drupal\icon_bundle_fontawesome\Metadata\MetadataProvider;
  *    style?: string,
  *    wrapper?: 'i'|'span',
  *    wrapper_class?: string,
+ *    wrapper_style?: string,
  *  },
  *  '#tree': bool,
  *  '#prefix': string,
@@ -67,6 +72,7 @@ use Drupal\icon_bundle_fontawesome\Metadata\MetadataProvider;
  *  '#style'?: array<string,mixed>,
  *  '#wrapper'?: array<string,mixed>,
  *  '#wrapper_class'?: array<string,mixed>,
+ *  '#wrapper_style'?: array<string,mixed>,
  * }
  */
 class FontAwesomeIconPicker extends FormElement {
@@ -212,8 +218,25 @@ class FontAwesomeIconPicker extends FormElement {
       ],
       '#autocomplete_route_name' => 'icon_bundle_fontawesome.autocomplete.icon_picker.wrapper_class',
     ] + ($element['#wrapper_class'] ?? []) + [
-      '#title'       => t('Icon Wrapper Classes'),
-      '#description' => t('A space separated list of CSS classes.'),
+      '#title'       => t('Icon CSS Classes'),
+      '#description' => t('A space separated list of CSS classes to be set to icon wrapper.'),
+      '#placeholder' => t('Start typying to autocomplete.'),
+    ];
+
+    $element['wrapper_style'] = [
+      '#type' => 'textfield',
+      '#name' => $names['wrapper_style'],
+      '#default_value' => $defaults['wrapper_style'],
+      '#ajax'          => [
+        'callback'        => [self::class, 'updateFormElement'],
+        'event'           => 'change',
+        'wrapper'         => $element_wrapper_id,
+        'disable-refocus' => TRUE,
+      ],
+      '#autocomplete_route_name' => 'icon_bundle_fontawesome.autocomplete.icon_picker.wrapper_style',
+    ] + ($element['#wrapper_style'] ?? []) + [
+      '#title'       => t('Icon CSS Style'),
+      '#description' => t('A semicolon separated list of CSS styles to be assigned to icon wrapper.'),
       '#placeholder' => t('Start typying to autocomplete.'),
     ];
 
@@ -227,6 +250,7 @@ class FontAwesomeIconPicker extends FormElement {
         '#style'         => $values['style'],
         '#wrapper'       => $values['wrapper'],
         '#wrapper_class' => $values['wrapper_class'],
+        '#wrapper_style' => $values['wrapper_style'],
       ],
     ];
 
@@ -292,6 +316,7 @@ class FontAwesomeIconPicker extends FormElement {
    *  style: '',
    *  wrapper: 'i',
    *  wrapper_class: '',
+   *  wrapper_style: '',
    * }
    */
   protected static function getFallbackValues(): array {
@@ -300,6 +325,7 @@ class FontAwesomeIconPicker extends FormElement {
       'style'         => '',
       'wrapper'       => 'i',
       'wrapper_class' => '',
+      'wrapper_style' => '',
     ];
   }
 

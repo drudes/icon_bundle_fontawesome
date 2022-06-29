@@ -29,11 +29,11 @@ class AutocompleteHelper {
    * @phpstan-param string[] $strings
    * @phpstan-return AutocompleteResultEntry[]
    */
-  public static function filterByWord(string $tag, array $strings): array {
+  public static function filterByWord(string $word, array $strings): array {
     $response = [];
 
     foreach ($strings as $string) {
-      $matched = mb_strstr($string, $tag);
+      $matched = mb_strstr($string, $word);
       if (FALSE !== $matched && mb_strlen($matched) > 0) {
         $response[] = [
           'value' => $string,
@@ -62,17 +62,17 @@ class AutocompleteHelper {
    */
   public static function getWords(Request $request): array {
     $input = self::getInput($request);
-    return preg_split('/\s+/', mb_strtolower($input));
+    return preg_split('/\s+/', mb_strtolower($input), -1, PREG_SPLIT_NO_EMPTY);
   }
 
   /**
    */
   public static function getLastWord(Request $request): string {
-    if (empty($tags = self::getWords($request))) {
+    if (empty($words = self::getWords($request))) {
       return '';
     }
 
-    return array_pop($tags);
+    return array_pop($words);
   }
 
 }

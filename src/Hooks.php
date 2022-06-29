@@ -99,6 +99,10 @@ final class Hooks implements HooksInterface, ContainerInjectionInterface {
       if (NULL !== ($wrapper_class = $variables['element']['#wrapper_class'] ?? NULL)) {
         $variables['attributes']->addClass($wrapper_class);
       }
+
+      if (NULL !== ($wrapper_style = $variables['element']['#wrapper_style'] ?? NULL)) {
+        $variables['attributes']['style'] = $wrapper_style;
+      }
     }
   }
 

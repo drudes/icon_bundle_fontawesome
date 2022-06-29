@@ -22,6 +22,14 @@ icon_bundle_fontawesome.autocomplete.icon_picker.wrapper_class:
   requirements:
     _permission: 'administer icons'
 
+icon_bundle_fontawesome.autocomplete.icon_picker.wrapper_style:
+  path: '/admin/icon-bundle-fontawesome/autocomplete/icon-picker/wrapper_style'
+  defaults:
+    _controller: '\Drupal\icon_bundle_fontawesome\Controller\IconPickerAutocompleteController::handleWrapperStyle'
+    _format: json
+  requirements:
+    _permission: 'administer icons'
+
 icon_bundle_fontawesome.autocomplete.settings_form.asset.cdn.uri:
   path: '/admin/icon-bundle-fontawesome/autocomplete/settings-form/asset/cdn/uri/{version}'
   defaults:
