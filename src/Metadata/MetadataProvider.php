@@ -148,10 +148,8 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
    *
    */
   public function clearCachedIconsDataArray(): void {
-    if ($this->cacheBackend) {
-      if (($tags = $this->getIconsDataArrayCacheTags())) {
-        Cache::invalidateTags($tags);
-      }
+    if (($tags = $this->getIconsDataArrayCacheTags())) {
+      Cache::invalidateTags($tags);
     }
     $this->iconsDataArray = NULL;
   }
@@ -160,17 +158,15 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
    *
    */
   public function clearCachedIconsSearchArray(): void {
-    if ($this->cacheBackend) {
-      if (($tags = $this->getIconsSearchArrayCacheTags())) {
-        Cache::invalidateTags($tags);
-      }
+    if (($tags = $this->getIconsSearchArrayCacheTags())) {
+      Cache::invalidateTags($tags);
     }
     $this->iconsSearchArray = NULL;
   }
 
   /**
    */
-  public function useCaches(bool $use_caches = FALSE) {
+  public function useCaches(bool $use_caches = FALSE): void {
     $this->useCaches = $use_caches;
     if (!$use_caches) {
       $this->iconsDataArray = NULL;
@@ -255,6 +251,7 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
    * @phpstan-return IconsDataArray
    */
   protected static function parseIconsDataArray(array $array): array {
+    $data_array = [];
     // Traverse through every icon.
     foreach ($array as $name => $data) {
       $styles = $data['styles'] ?? [];
@@ -284,7 +281,7 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
   protected static function buildIconsSearchArray(array $data_array): array {
     $search_array = [];
     foreach ($data_array as $icon_key => $icon_data) {
-      $icon_names = array_merge([$icon_key], $icon_data['aliases']['names'] ?? []);
+      $icon_names = array_merge([$icon_key], $icon_data['aliases']['names']);
       foreach ($icon_names as $icon_name) {
         if (!isset($search_array[$icon_name])) {
           $search_array[$icon_name] = [];
