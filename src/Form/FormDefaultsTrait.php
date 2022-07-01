@@ -82,7 +82,7 @@ trait FormDefaultsTrait {
    */
   protected function defaultsSetTranslatableProperty(array &$element, string $key, $value): void {
     if ('' !== (string) $value && !array_key_exists($key, $element)) {
-      $element[$key] = $this->t((string)$value);
+      $element[$key] = $this->t((string) $value);
     }
   }
 

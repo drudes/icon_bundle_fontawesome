@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\icon_bundle_fontawesome\Metadata;
 
-//--use Drupal\Component\Utility\NestedArray;
-//--use Drupal\Core\Config\ConfigFactoryInterface;
-//--use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Url;
-//--use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  *

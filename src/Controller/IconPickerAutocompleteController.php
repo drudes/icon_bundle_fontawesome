@@ -110,7 +110,7 @@ final class IconPickerAutocompleteController extends ControllerBase implements C
       'fa-flip-vertical' => 'rotating',
       'fa-flip-both' => 'rotating',
       'fa-rotate-by' => 'rotating',
-          // Animating icons
+          // Animating icons.
       'fa-spin' => 'animating',
       'fa-spin-pulse' => 'animating',
       'fa-spin-reverse' => 'animating-spin-direction',
@@ -166,15 +166,15 @@ final class IconPickerAutocompleteController extends ControllerBase implements C
   public function handleWrapperStyle(Request $request): JsonResponse {
     // https://fontawesome.com/docs/web/style/style-cheatsheet
     $styles_defaults = [
-      // General
+      // General.
       '--fa-display' => 'inline-block',
       '--fa-inverse' => '#fff',
-      // Icons in a list
+      // Icons in a list.
       '--fa-li-margin' => '0',
       '--fa-li-width' => '0',
-      // Rotation
+      // Rotation.
       '--fa-rotate-angle' => '0',
-      // Animating
+      // Animating.
       '--fa-animation-delay' => '0s',
       '--fa-animation-direction' => 'normal',
       '--fa-animation-duration' => 'unset',
@@ -188,22 +188,22 @@ final class IconPickerAutocompleteController extends ControllerBase implements C
       '--fa-flip-y' => '0.5',
       '--fa-flip-z' => '0.5',
       '--fa-flip-angle' => '',
-      // Bordered Icons
+      // Bordered Icons.
       '--fa-border-color' => 'black',
       '--fa-border-padding' => '0',
       '--fa-border-radius' => '0',
       '--fa-border-style' => 'solid',
       '--fa-border-width' => '1px',
-      // Pulled Icons
+      // Pulled Icons.
       '--fa-pull-margin' => '.3em',
-      // Stacking icons
+      // Stacking icons.
       '--fa-stack-z-index' => 'auto',
-      // Duotone Icons
+      // Duotone Icons.
       '--fa-primary-color' => '#a3adba',
       '--fa-primary-opacity' => '1.0',
       '--fa-secondary-color' => '#183153',
       '--fa-secondary-opacity' => '1.0',
-      // Pseudo-elements
+      // Pseudo-elements.
       '--fa-font-solid' => 'normal 900 1em/1 "Font Awesome 6 Solid"',
       '--fa-font-regular' => 'normal 400 1em/1 "Font Awesome 6 Regular"',
       '--fa-font-light' => 'normal 300 1em/1 "Font Awesome 6 Light"',

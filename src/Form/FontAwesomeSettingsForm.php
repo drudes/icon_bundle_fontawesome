@@ -10,8 +10,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\TypedData\DataDefinitionInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\icon_bundle_fontawesome\Metadata\MetadataLocator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

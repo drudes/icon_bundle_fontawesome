@@ -61,8 +61,8 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
     $this->metadataLocator = $metadata_locator;
     $this->cacheBackend = $cache_backend;
     $this->cacheKey = $cache_key;
-    $this->iconsDataArray = null;
-    $this->iconsSearchArray = null;
+    $this->iconsDataArray = NULL;
+    $this->iconsSearchArray = NULL;
   }
 
   /**
@@ -75,6 +75,9 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
     return self::createFromConfig($app_root, $config_factory, $cache_backend);
   }
 
+  /**
+   *
+   */
   public static function createFromConfig(string $app_root, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend): self {
     $config_key = 'icon_bundle_fontawesome.settings';
     $config = $config_factory->get($config_key);
@@ -179,7 +182,7 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
    */
   protected function getCachedIconsDataArray(): ?array {
     if (!isset($this->iconsDataArray) && ($cache = $this->cacheGet($this->getIconsDataArrayCacheId()))) {
-      $this->iconsDataArray = (array)$cache->data;
+      $this->iconsDataArray = (array) $cache->data;
     }
     return $this->iconsDataArray;
   }
@@ -189,7 +192,7 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
    */
   protected function getCachedIconsSearchArray(): ?array {
     if (!isset($this->iconsSearchArray) && ($cache = $this->cacheGet($this->getIconsSearchArrayCacheId()))) {
-      $this->iconsSearchArray = (array)$cache->data;
+      $this->iconsSearchArray = (array) $cache->data;
     }
     return $this->iconsSearchArray;
   }
@@ -306,4 +309,5 @@ final class MetadataProvider implements MetadataProviderInterface, ContainerInje
 
     return $search_array;
   }
+
 }
